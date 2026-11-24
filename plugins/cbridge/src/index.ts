@@ -16,8 +16,8 @@ import { CBridgeService } from "./service";
  * Key features:
  * - Multi-chain support across 60+ networks
  * - Transfer configs API for chain/token metadata
- * - Estimate amount API for rate quotes
- * - No public volume API (returns empty arrays)
+ * - Estimate amount API for rate quotes and liquidity depth probing
+ * - Volume metrics from DefiLlama Bridge API (bridge id 10)
  * - Public API (no authentication required)
  */
 export default createPlugin({

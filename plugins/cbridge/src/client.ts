@@ -15,6 +15,7 @@ export const CBridgeAsset = z.object({
   address: z.string(),
   symbol: z.string(),
   decimals: z.number(),
+  name: z.string().optional(),
 });
 
 export type CBridgeAssetType = z.infer<typeof CBridgeAsset>;
@@ -83,10 +84,26 @@ export interface CBridgeEstimateResponse {
     code: number;
     msg: string;
   } | null;
+  eq_value_token_amt: string;
   estimated_receive_amt: string;
   base_fee: string;
   perc_fee: string;
   bridge_rate: number;
+  max_slippage: number;
+  slippage_tolerance: number;
+}
+
+/**
+ * DefiLlama Bridge Stats Response
+ */
+export interface DefiLlamaBridgeResponse {
+  id: number;
+  displayName: string;
+  lastDailyVolume: number;
+  weeklyVolume: number;
+  monthlyVolume: number;
+  currentDayVolume: number;
+  dayBeforeLastVolume: number;
 }
 
 /**
@@ -94,6 +111,7 @@ export interface CBridgeEstimateResponse {
  */
 export class CBridgeApiClient {
   private readonly cbridgeHttp: HttpClient;
+  private readonly defillamaHttp: HttpClient;
 
   constructor(
     private readonly baseUrl: string,
@@ -102,6 +120,14 @@ export class CBridgeApiClient {
     this.cbridgeHttp = createHttpClient({
       baseUrl,
       rateLimiter: createRateLimiter(10),
+      timeout,
+      retries: 3
+    });
+
+    // Separate client for DefiLlama
+    this.defillamaHttp = createHttpClient({
+      baseUrl: "https://bridges.llama.fi",
+      rateLimiter: createRateLimiter(5), // Lower rate limit for DefiLlama
       timeout,
       retries: 3
     });
@@ -126,5 +152,12 @@ export class CBridgeApiClient {
     slippage_tolerance: number;
   }): Promise<CBridgeEstimateResponse> {
     return this.cbridgeHttp.get<CBridgeEstimateResponse>('/v2/estimateAmt', { params });
+  }
+
+  /**
+   * Fetch volume data from DefiLlama Bridge API.
+   */
+  async fetchDefiLlamaVolumes(bridgeId: string): Promise<DefiLlamaBridgeResponse> {
+    return this.defillamaHttp.get<DefiLlamaBridgeResponse>(`/bridge/${bridgeId}`);
   }
 }

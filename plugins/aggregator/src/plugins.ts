@@ -1,5 +1,6 @@
 import { Effect } from 'every-plugin/effect';
 import AcrossPlugin from "@data-provider/across";
+import CBridgePlugin from "@data-provider/cbridge";
 import CCTPPlugin from "@data-provider/cctp";
 import LayerZeroPlugin from "@data-provider/layerzero";
 import NearIntentsPlugin from "@data-provider/near-intents";
@@ -24,6 +25,7 @@ export function getPluginRuntime(config: PluginRuntimeConfig) {
             "@data-provider/across": { module: AcrossPlugin },
             "@data-provider/layerzero": { module: LayerZeroPlugin },
             "@data-provider/cctp": { module: CCTPPlugin },
+            "@data-provider/cbridge": { module: CBridgePlugin },
           },
           secrets: config.secrets,
         });
@@ -62,10 +64,10 @@ export function getPluginRuntime(config: PluginRuntimeConfig) {
           secrets: {}
         });
 
-        // const cbridge = await runtime.usePlugin("@data-provider/cbridge", {
-        //   variables: {},
-        //   secrets: {}
-        // });
+        const cbridge = await runtime.usePlugin("@data-provider/cbridge", {
+          variables: {},
+          secrets: {}
+        });
 
         // const debridge = await runtime.usePlugin("@data-provider/debridge", {
         //   variables: {},
@@ -84,7 +86,7 @@ export function getPluginRuntime(config: PluginRuntimeConfig) {
           // "lifi": lifi.client,
           // "axelar": axelar.client,
           "circle_cctp": circle_cctp.client,
-          // "cbridge": cbridge.client,
+          "cbridge": cbridge.client,
           // "debridge": debridge.client,
           // "wormhole": wormhole.client,
         };

@@ -29,13 +29,22 @@ export const testRoutes = [
   }
 ];
 
+// Universal test notionals: $100, $1K, $10K, $100K, $1M (in USDC base units)
+export const testNotionals = [
+  "100000000",      // $100
+  "1000000000",     // $1,000
+  "10000000000",    // $10,000
+  "100000000000",   // $100,000
+  "1000000000000"   // $1,000,000
+];
+
 export default {
   pluginId: packageJson.name, // DO NOT CHANGE
   port: 3014,
   config: {
     // Update these variables to what's required for your plugin
     variables: {
-      timeout: 1000
+      timeout: 30000
     },
     secrets: {
     }
